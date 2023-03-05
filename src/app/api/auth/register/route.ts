@@ -1,3 +1,26 @@
+import prisma from "@/libs/prisma"
+import { NextResponse } from "next/server"
+import bcrypt from 'bcrypt'
+
 export async function POST(request: Request) {
-    return new Response('Register Route')
+    try {
+        const body = await request.json()
+        const hashedPassword = await bcrypt.hash(body.password, 10)
+        const role = await prisma.role.findUnique({
+            where: {
+                name: body.role
+            }
+        })
+
+        const user = await prisma.user.create({
+            data: {
+                email: body.email,
+                password: hashedPassword,
+                role: { connect: { id: role?.id } }
+            }
+        })
+        return NextResponse.json(user)
+    } catch (err) {
+        return NextResponse.json(err.message)
+    }
 }

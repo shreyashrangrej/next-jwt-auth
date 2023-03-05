@@ -21,11 +21,3 @@ export async function POST(request: Request) {
         return NextResponse.json(err)
     }
 }
-
-export async function PUT(request: Request) {
-    return new Response('Update Role')
-}
-
-export async function DELETE(request: Request) {
-    return new Response('Delete')
-}
