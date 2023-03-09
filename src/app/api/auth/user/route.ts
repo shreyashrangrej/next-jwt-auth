@@ -1,6 +1,11 @@
 import prisma from '@/libs/prisma'
+import { NextResponse } from 'next/server'
 
 export async function GET() {
-    const findAll = await prisma.user.findMany()
-    return new Response(JSON.stringify(findAll))
+    try {
+        const findAll = await prisma.user.findMany()
+        return NextResponse.json(findAll)
+    } catch(err) {
+        return NextResponse.json(err)
+    }
 }

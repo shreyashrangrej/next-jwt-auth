@@ -1,42 +1,46 @@
 import prisma from '@/libs/prisma'
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request, { params }) {
+interface Params {
+    id: number
+}
+
+export async function GET(request: Request, { params }: { params: Params }) {
     try {
         const findOne = await prisma.role.findUnique({
             where: {
-                id: parseInt(params.id)
+                id: params.id
             }
         })
         return NextResponse.json(findOne)
-    } catch (err) {
+    } catch (err: any) {
         return NextResponse.json(err.message)
     }
 }
 
-export async function PUT(request: Request, { params }) {
+export async function PUT(request: Request, { params }: { params: Params }) {
     try {
         const updateOne = await prisma.role.update({
             where: {
-                id: parseInt(params.id)
+                id: params.id
             },
             data: await request.json()
         })
         return NextResponse.json(updateOne)
-    } catch (err) {
+    } catch (err: any) {
         return NextResponse.json(err.message)
     }
 }
 
-export async function DELETE(request: Request, { params }) {
+export async function DELETE(request: Request, { params }: { params: Params }) {
     try {
         const deleteOne = await prisma.role.delete({
             where: {
-                id: parseInt(params.id)
+                id: params.id
             },
         })
         return NextResponse.json(deleteOne)
-    } catch (err) {
+    } catch (err: any) {
         return NextResponse.json(err.message)
     }
 }

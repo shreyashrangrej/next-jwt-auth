@@ -1,6 +1,7 @@
 import prisma from "@/libs/prisma"
 import { NextResponse } from "next/server"
 import bcrypt from 'bcrypt'
+import sendVerification from "@/app/util/emailFunctions/sendVerification"
 
 export async function POST(request: Request) {
     try {
@@ -19,8 +20,9 @@ export async function POST(request: Request) {
                 role: { connect: { id: role?.id } }
             }
         })
+        sendVerification(user)
         return NextResponse.json(user)
-    } catch (err) {
+    } catch (err: any) {
         return NextResponse.json(err.message)
     }
 }
