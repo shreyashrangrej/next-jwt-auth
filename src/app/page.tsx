@@ -1,7 +1,26 @@
 "use client";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button } from '@mantine/core';
+import { useState } from 'react';
+import jwtDecode from 'jwt-decode';
+
 
 export default function Home() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState(null);
+
+  const handleEmailChange = (event: any) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event: any) => {
+    setPassword(event.target.value);
+  };
+
+  const handleLogin = async () => {
+
+  }
+
   return (
     <Container size={420} my={40}>
       <Title
@@ -18,16 +37,16 @@ export default function Home() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Email" placeholder="you@mantine.dev" required />
-        <PasswordInput label="Password" placeholder="Your password" required mt="md" />
+        <TextInput label="Email" placeholder="you@mantine.dev" required id="email" value={email} onChange={handleEmailChange} />
+        <PasswordInput label="Password" placeholder="Your password" required mt="md" id="password" value={password} onChange={handlePasswordChange} />
         <Group position="apart" mt="lg">
           <Checkbox label="Remember me" />
           <Anchor component="button" size="sm">
             Forgot password?
           </Anchor>
         </Group>
-        <Button fullWidth mt="xl">
-          Sign in
+        <Button fullWidth mt="xl" onClick={handleLogin}>
+          Log In
         </Button>
       </Paper>
     </Container>
