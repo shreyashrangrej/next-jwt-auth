@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import prisma from '../prisma';
 
-export default async function authenticate(token: string) {
+export default async function authenticate(token: string, allowedRoles: string[]) {
     const tokenCode = token.split(' ')[1]
     if (!tokenCode) {
         return null
@@ -15,9 +15,31 @@ export default async function authenticate(token: string) {
             where: {
                 email: decoded.userId,
             },
+            select: {
+                id: true,
+                email: true,
+                role: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                },
+                emailVerified: true,
+                profile: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true
+                    }
+                }
+            },
         })
-
         if (!user) {
+            return null
+        }
+        if (allowedRoles.includes(user.role.name)) {
+            return user
+        } else {
             return null
         }
         return user
