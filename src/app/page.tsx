@@ -1,6 +1,7 @@
 "use client";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Header } from '@mantine/core';
 import { useState } from 'react';
+import { notifications } from '@mantine/notifications'
 import jwt from 'jsonwebtoken';
 
 
@@ -27,6 +28,10 @@ export default function Home() {
     } else {
       setMessage('Something went wrong.')
     }
+    notifications.show({
+      title: 'Message',
+      message: message,
+    })
   }
 
   return (
@@ -45,8 +50,8 @@ export default function Home() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Email" placeholder="you@mantine.dev" required id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <PasswordInput label="Password" placeholder="Your password" required mt="md" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <TextInput label="Email" placeholder="you@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        <PasswordInput label="Password" placeholder="Your password" required mt="md" value={password} onChange={(e) => setPassword(e.target.value)} />
         <Group position="apart" mt="lg">
           <Checkbox label="Remember me" />
           <Anchor component="button" size="sm">
