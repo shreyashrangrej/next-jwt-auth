@@ -2,8 +2,7 @@
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Header } from '@mantine/core';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications'
-import jwt from 'jsonwebtoken';
-
+import jwt from 'jsonwebtoken'
 
 export default function Home() {
   const [email, setEmail] = useState<string>('')
@@ -18,19 +17,22 @@ export default function Home() {
         "Content-Type": "application/json"
       }
     }).then((t) => t.json())
-  
+
     const token = res.token
     localStorage.setItem('token', token)
 
-    if(token){ 
+    if (token) {
       const json = jwt.decode(token) as { [key: string]: string }
       setMessage(`Welcome ${json.userId}`)
     } else {
       setMessage('Something went wrong.')
     }
+  }
+
+  async function showNotification() {
     notifications.show({
-      title: 'Message',
-      message: message,
+      title: 'Auth Notification',
+      message: message
     })
   }
 
@@ -58,7 +60,10 @@ export default function Home() {
             Forgot password?
           </Anchor>
         </Group>
-        <Button fullWidth mt="xl" onClick={handleLogin}>
+        <Button fullWidth mt="xl" onClick={() => {
+          handleLogin()
+          showNotification()
+        }}>
           Log In
         </Button>
       </Paper>
