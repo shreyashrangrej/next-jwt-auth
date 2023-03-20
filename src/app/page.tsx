@@ -8,7 +8,6 @@ export default function Home() {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [message, setMessage] = useState<string>('')
-  const [token, setToken] = useState(null);
 
   async function handleLogin() {
     const res = await fetch('/api/auth/login', {
