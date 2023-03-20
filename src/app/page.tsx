@@ -1,24 +1,33 @@
 "use client";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button } from '@mantine/core';
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Header } from '@mantine/core';
 import { useState } from 'react';
-import jwtDecode from 'jwt-decode';
+import jwt from 'jsonwebtoken';
 
 
 export default function Home() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
   const [token, setToken] = useState(null);
 
-  const handleEmailChange = (event: any) => {
-    setEmail(event.target.value);
-  };
+  async function handleLogin() {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then((t) => t.json())
+  
+    const token = res.token
+    localStorage.setItem('token', token)
 
-  const handlePasswordChange = (event: any) => {
-    setPassword(event.target.value);
-  };
-
-  const handleLogin = async () => {
-
+    if(token){ 
+      const json = jwt.decode(token) as { [key: string]: string }
+      setMessage(`Welcome ${json.userId}`)
+    } else {
+      setMessage('Something went wrong.')
+    }
   }
 
   return (
@@ -37,8 +46,8 @@ export default function Home() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Email" placeholder="you@mantine.dev" required id="email" value={email} onChange={handleEmailChange} />
-        <PasswordInput label="Password" placeholder="Your password" required mt="md" id="password" value={password} onChange={handlePasswordChange} />
+        <TextInput label="Email" placeholder="you@mantine.dev" required id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <PasswordInput label="Password" placeholder="Your password" required mt="md" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <Group position="apart" mt="lg">
           <Checkbox label="Remember me" />
           <Anchor component="button" size="sm">
@@ -49,6 +58,7 @@ export default function Home() {
           Log In
         </Button>
       </Paper>
+      <h1>{message}</h1>
     </Container>
   )
 }
