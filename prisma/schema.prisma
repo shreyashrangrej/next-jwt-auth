@@ -20,8 +20,17 @@ model User {
   resetPasswordExpires DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
+  profile              Profile?
 
   @@index([roleId])
+}
+
+model Profile {
+  id        Int    @id @default(autoincrement())
+  firstName String
+  lastName  String
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int    @unique
 }
 
 model Role {
