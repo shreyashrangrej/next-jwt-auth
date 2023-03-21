@@ -1,5 +1,5 @@
 "use client";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Header } from '@mantine/core';
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button } from '@mantine/core';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications'
 import jwt from 'jsonwebtoken'
@@ -23,18 +23,24 @@ export default function Home() {
 
     if (token) {
       const json = jwt.decode(token) as { [key: string]: string }
-      setMessage(`Welcome ${json.userId}`)
+      const message = `Welcome ${json.userId}`;
+      setMessage(message)
+      showNotification(message, 'blue')
     } else {
-      setMessage('Something went wrong.')
+      const message = `Invalid Credentials!`
+      setMessage(message)
+      showNotification(message, 'red')
     }
   }
 
-  async function showNotification() {
+  async function showNotification(message: string, color: string) {
     notifications.show({
       title: 'Auth Notification',
-      message: message
+      message: message,
+      color: color
     })
   }
+
 
   return (
     <Container size={420} my={40}>
@@ -62,12 +68,10 @@ export default function Home() {
         </Group>
         <Button fullWidth mt="xl" onClick={() => {
           handleLogin()
-          showNotification()
         }}>
           Log In
         </Button>
       </Paper>
-      <h1>{message}</h1>
     </Container>
   )
 }
